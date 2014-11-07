@@ -1,3 +1,9 @@
+//
+// Example on how to request account lines and page through the responses
+//
+// requires ripple-lib 0.9.2-rc4 or higher
+//
+
 var Remote = require('ripple-lib').Remote;
 
 var rippleAccount = 'rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B';
@@ -17,12 +23,18 @@ function getRandomLimit() {
 
 remote.connect(function() {
   console.log('Connected');
-  getAccountLines(rippleAccount, getRandomLimit());
 });
 
-function getAccountLines(rippleAccount, limit, marker) {
+remote.once('ledger_closed', function(ledger) {
+  // we need to provide a ledger_index or ledger_hash to make sure we
+  // get a complete and reliable result for all account lines
+  getAccountLines(rippleAccount, getRandomLimit(), ledger.ledger_index);
+});
+
+function getAccountLines(rippleAccount, limit, ledger_index, marker) {
   var options = {
-    limit: limit
+    limit: limit,
+    ledger: ledger_index
   }
 
   if (marker) {
@@ -49,7 +61,7 @@ function getAccountLines(rippleAccount, limit, marker) {
 
     // if there's a marker, keep on querying
     if (result.marker) {
-      getAccountLines(rippleAccount, getRandomLimit(), result.marker);
+      getAccountLines(rippleAccount, getRandomLimit(), ledger_index, result.marker);
     } else {
       done();
     }
@@ -60,4 +72,7 @@ function getAccountLines(rippleAccount, limit, marker) {
 
 function done() {
   console.log('all done, ' + accountLines.length + ' found');
+  // to print the result
+  // console.log(JSON.stringify(accountLines, null, 2));
+  process.exit();
 }
