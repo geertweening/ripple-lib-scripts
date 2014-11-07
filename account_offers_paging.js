@@ -1,3 +1,9 @@
+//
+// Example on how to request account offers and page through the responses
+//
+// requires ripple-lib 0.9.2-rc4 or higher
+//
+
 var Remote = require('ripple-lib').Remote;
 
 var rippleAccount = 'rBwhtkgKgq7cDnMNUAK98LBV1eRXsC9yzs';
@@ -17,12 +23,19 @@ function getRandomLimit() {
 
 remote.connect(function() {
   console.log('Connected');
-  getAccountOffers(rippleAccount, getRandomLimit());
+
 });
 
-function getAccountOffers(rippleAccount, limit, marker) {
+remote.once('ledger_closed', function(ledger) {
+  // we need to provide a ledger_index or ledger_hash to make sure we
+  // get a complete and reliable result for all account lines
+  getAccountOffers(rippleAccount, getRandomLimit(), ledger.ledger_index);
+});
+
+function getAccountOffers(rippleAccount, limit, ledger_index, marker) {
   var options = {
-    limit: limit
+    limit: limit,
+    ledger: ledger_index
   }
 
   if (marker) {
@@ -47,7 +60,7 @@ function getAccountOffers(rippleAccount, limit, marker) {
 
     // if there's a marker, keep on querying
     if (result.marker) {
-      getAccountOffers(rippleAccount, getRandomLimit(), result.marker);
+      getAccountOffers(rippleAccount, getRandomLimit(), ledger_index, result.marker);
     } else {
       done();
     }
@@ -58,4 +71,5 @@ function getAccountOffers(rippleAccount, limit, marker) {
 
 function done() {
   console.log('all done, ' + accountOffers.length + ' found');
+  process.exit();
 }
