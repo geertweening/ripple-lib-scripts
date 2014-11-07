@@ -12,7 +12,7 @@ var remote = new Remote({
 
 // min is 10, max is 400
 function getRandomLimit() {
-  return Math.random() * (400 - 10) + 10;
+  return Math.round(Math.random() * (400 - 10) + 10);
 }
 
 remote.connect(function() {
