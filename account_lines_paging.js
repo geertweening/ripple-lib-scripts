@@ -33,6 +33,7 @@ remote.once('ledger_closed', function(ledger) {
 
 function getAccountLines(rippleAccount, limit, ledger_index, marker) {
   var options = {
+    account: rippleAccount,
     limit: limit,
     ledger: ledger_index
   }
@@ -41,7 +42,7 @@ function getAccountLines(rippleAccount, limit, ledger_index, marker) {
     options.marker = marker;
   }
 
-  var request = remote.requestAccountLines(rippleAccount, options);
+  var request = remote.requestAccountLines(options);
 
   request.once('error', function(error) {
     console.log('Request account lines error', error);

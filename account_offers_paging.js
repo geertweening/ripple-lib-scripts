@@ -34,6 +34,7 @@ remote.once('ledger_closed', function(ledger) {
 
 function getAccountOffers(rippleAccount, limit, ledger_index, marker) {
   var options = {
+    account: rippleAccount,
     limit: limit,
     ledger: ledger_index
   }
@@ -42,7 +43,7 @@ function getAccountOffers(rippleAccount, limit, ledger_index, marker) {
     options.marker = marker;
   }
 
-  var request = remote.requestAccountOffers(rippleAccount, options);
+  var request = remote.requestAccountOffers(options);
 
   request.once('error', function(error) {
     console.log('Request account offers error', error);
