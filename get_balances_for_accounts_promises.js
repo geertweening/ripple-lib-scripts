@@ -1,3 +1,12 @@
+//
+// get balances for given set of accounts
+// the balances are the total sum of both XRP and IOU's
+// balances for IOU's get retrieved by retrieving the account lines and summing the balances
+// balances for XRP get retrieved by account info
+//
+// requires ripple-lib 0.9.2-rc5 or higher
+//
+
 var Remote = require('ripple-lib').Remote;
 var _       = require('lodash');
 var Promise = require('bluebird');
@@ -50,17 +59,12 @@ function getAccountInfoForAccounts(accounts) {
   Promise.all(promises)
   .then(function(data) {
     console.log('all accounts have been processed');
-
-
     console.log(JSON.stringify(data, null, 2));
-
-
-    var results = _.map(data, function(entry) {
-      // console.log(JSON.stringify(entry[0], null, 2));
-    });
+    process.exit(0);
   })
   .error(function(e) {
     console.log("Error", e);
+    process.exit(1);
   });
 
 }
@@ -68,7 +72,7 @@ function getAccountInfoForAccounts(accounts) {
 
 function getBalances(account) {
   return new Promise(function (resolve, reject) {
-    var request = remote.requestAccountLines(account.address);
+    var request = remote.requestAccountLines({account: account.address});
 
     // reject on error
     request.once('error', reject);
@@ -95,7 +99,7 @@ function getBalances(account) {
 function getXRPBalance(account) {
 
   return new Promise(function (resolve, reject) {
-    var xrpRequest = remote.requestAccountInfo(account.address);
+    var xrpRequest = remote.requestAccountInfo({account: account.address});
 
     // reject on error
     xrpRequest.once('error', reject);
