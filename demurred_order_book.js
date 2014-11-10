@@ -45,12 +45,13 @@ remote.connect(function() {
 
 
 function getOrderBook(_gets, _pays) {
-
-  var request = remote.request_book_offers({
+  var options = {
     gets: _gets,
     pays: _pays,
     limit: 100
-  });
+  };
+
+  var request = remote.requestBookOffers(options);
 
   request.on('success', function (data) {
     console.log('SUCCESS: ' + _gets.currency + '/' + _pays.currency);
