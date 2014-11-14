@@ -23,8 +23,8 @@ remote.connect(function() {
 });
 
 function getAccountInfo(rippleAccount) {
-  var request = remote.requestAccountLines(rippleAccount);
-  var xrpRequest = remote.requestAccountInfo(rippleAccount);
+  var request = remote.requestAccountLines({account: rippleAccount});
+  var xrpRequest = remote.requestAccountInfo({account: rippleAccount});
   var balances = [];
 
   request.once('error', function(error) {
