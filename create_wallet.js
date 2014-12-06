@@ -18,7 +18,7 @@ var toAccount = newAccount.address;
 var remote = new ripple.Remote({
   trace :         false,
   servers: [
-    { host: 's1.ripple.com', port: 443, secure: true }
+    { host: 's-west.ripple.com', port: 443, secure: true }
   ]
 });
 

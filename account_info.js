@@ -3,7 +3,7 @@
 //
 
 var Remote = require('ripple-lib').Remote;
-var remote = new Remote({servers: [ 'wss://s1.ripple.com:443' ]});
+var remote = new Remote({servers: [ 'wss://s-west.ripple.com:443' ]});
 
 remote.connect(function() {
   var options = {
